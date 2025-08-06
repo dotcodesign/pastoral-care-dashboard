@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastoral Care Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .header-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #111827;
+        }
+        
+        .header-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 0.5rem 0.25rem;
+            border: none;
+            background: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #6b7280;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-tab.active {
+            color: #2563eb;
+            border-bottom-color: #3b82f6;
+        }
+        
+        .nav-tab:hover {
+            color: #374151;
+        }
+        
+        .main-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-blue {
+            background-color: #2563eb;
+            color: white;
+        }
+        
+        .btn-blue:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .btn-red {
+            background-color: #dc2626;
+            color: white;
+        }
+        
+        .btn-red:hover {
+            background-color: #b91c1c;
+        }
+        
+        .btn-green {
+            background-color: #16a34a;
+            color: white;
+        }
+        
+        .btn-green:hover {
+            background-color: #15803d;
+        }
+        
+        .btn-purple {
+            background-color: #7c3aed;
+            color: white;
+        }
+        
+        .btn-purple:hover {
+            background-color: #6d28d9;
+        }
+        
+        .complete-btn {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .complete-btn:hover {
+            background-color: #059669;
+            transform: scale(1.05);
+        }
+        
+        .student-id-link {
+            color: #2563eb;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        
+        .student-id-link:hover {
+            color: #1d4ed8;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+        
+        .risk-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .risk-badge.high {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .risk-badge.medium {
+            background-color: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        
+        .risk-badge.low {
+            background-color: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            background-color: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #111827;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .table td {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .table tr:hover {
+            background-color: #f9fafb;
+        }
+        
+        .modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 1rem;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
+            max-width: 400px;
+            width: 90%;
+            z-index: 1000;
+            border: 2px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #file-upload {
+            display: none;
+        }
+        
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upload-area:hover {
+            border-color: #9ca3af;
+            background-color: #f9fafb;
+        }
+        
+        .upload-title {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .upload-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <h1 class="header-title">Pastoral Care Dashboard</h1>
+                <div class="header-date" id="current-date"></div>
+            </div>
+            
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('dashboard')" id="tab-dashboard">My Day</button>
+                <button class="nav-tab" onclick="switchTab('data')" id="tab-data">Data Entry</button>
+                <button class="nav-tab" onclick="switchTab('whanau')" id="tab-whanau">Whānau Follow-up</button>
+                <button class="nav-tab" onclick="switchTab('urgent')" id="tab-urgent">Urgent Action</button>
+                <button class="nav-tab" onclick="switchTab('tutor-analysis')" id="tab-tutor-analysis">Tutor Follow-up</button>
+                <button class="nav-tab" onclick="switchTab('celebrations')" id="tab-celebrations">Celebrations</button>
+                <button class="nav-tab" onclick="switchTab('students')" id="tab-students">All Students</button>
+            </nav>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- My Day Tab -->
+        <div id="content-dashboard" class="tab-content active">
+            <!-- Time and Workload Overview -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.25rem;">Good morning! Here's your day</h2>
+                        <p style="opacity: 0.9;" id="current-date-myday"></p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 2rem; font-weight: bold;" id="total-actions-today">0</div>
+                        <div style="font-size: 0.875rem; opacity: 0.9;">actions needed</div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+                    <div style="text-align: center; background: rgba(255,255,255,0.2); border-radius: 0.375rem; padding: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;" id="urgent-calls-count">0</div>
+                        <div style="font-size: 0.75rem;">Urgent Calls</div>
+                    </div>
+                    <div style="text-align: center; background: rgba(255,255,255,0.2); border-radius: 0.375rem; padding: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;" id="follow-ups-count">0</div>
+                        <div style="font-size: 0.75rem;">Follow-ups</div>
+                    </div>
+                    <div style="text-align: center; background: rgba(255,255,255,0.2); border-radius: 0.375rem; padding: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;" id="celebrations-count">0</div>
+                        <div style="font-size: 0.75rem;">Celebrations</div>
+                    </div>
+                    <div style="text-align: center; background: rgba(255,255,255,0.2); border-radius: 0.375rem; padding: 0.75rem;">
+                        <div style="font-size: 1.25rem; font-weight: bold;" id="estimated-time">0</div>
+                        <div style="font-size: 0.75rem;">Est. Minutes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Priority Actions Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- Urgent Actions (Left Column) -->
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #dc2626; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        🚨 Urgent Actions (Do First)
+                    </h3>
+                    
+                    <!-- High Priority Calls -->
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-header" style="background-color: #fef2f2;">
+                            <h4 style="color: #991b1b; font-weight: 600;">📞 Calls Needed Today</h4>
+                            <p style="font-size: 0.875rem; color: #b91c1c; margin-top: 0.25rem;">Truancy and critical attendance issues</p>
+                        </div>
+                        <div id="urgent-calls-container" style="padding: 0;">
+                            <div class="empty-state" style="padding: 1rem;">
+                                <p style="color: #16a34a;">No urgent calls needed today! 🎉</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leadership Escalations -->
+                    <div class="card">
+                        <div class="card-header" style="background-color: #fef3c7;">
+                            <h4 style="color: #92400e; font-weight: 600;">⬆️ Escalate to Leadership</h4>
+                            <p style="font-size: 0.875rem; color: #b45309; margin-top: 0.25rem;">Cases needing senior support</p>
+                        </div>
+                        <div id="escalation-container" style="padding: 0;">
+                            <div class="empty-state" style="padding: 1rem;">
+                                <p style="color: #16a34a;">No escalations needed today!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Follow-up Actions (Right Column) -->
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #2563eb; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        📋 Follow-up Actions
+                    </h3>
+                    
+                    <!-- Medium Priority Follow-ups -->
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-header" style="background-color: #eff6ff;">
+                            <h4 style="color: #1e40af; font-weight: 600;">📧 Email/Check-ins</h4>
+                            <p style="font-size: 0.875rem; color: #2563eb; margin-top: 0.25rem;">Medium priority attendance concerns</p>
+                        </div>
+                        <div id="followup-container" style="padding: 0;">
+                            <div class="empty-state" style="padding: 1rem;">
+                                <p>No follow-ups needed today</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Positive Actions -->
+                    <div class="card">
+                        <div class="card-header" style="background-color: #f0fdf4;">
+                            <h4 style="color: #15803d; font-weight: 600;">🌟 Celebrate Success</h4>
+                            <p style="font-size: 0.875rem; color: #16a34a; margin-top: 0.25rem;">Students improving - acknowledge progress</p>
+                        </div>
+                        <div id="celebration-actions-container" style="padding: 0;">
+                            <div class="empty-state" style="padding: 1rem;">
+                                <p>No celebrations identified today</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Bar -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">⚡ Quick Actions</h4>
+                </div>
+                <div class="card-content">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <button onclick="markAllUrgentComplete()" class="btn btn-red">
+                            ✅ Mark All Urgent Complete
+                        </button>
+                        <button onclick="exportTodaysPlan()" class="btn btn-blue">
+                            📋 Export Today's Plan
+                        </button>
+                        <button onclick="setReminders()" class="btn btn-green">
+                            ⏰ Set Follow-up Reminders
+                        </button>
+                        <button onclick="quickStatsUpdate()" class="btn btn-green">
+                            📊 Quick Stats Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Entry Tab -->
+        <div id="content-data" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Upload KAMAR Data</h3>
+                    <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">Upload your KAMAR export CSV file</p>
+                </div>
+                <div class="card-content">
+                    <div class="upload-area" onclick="document.getElementById('file-upload').click()">
+                        <div class="upload-title">Upload CSV File</div>
+                        <div class="upload-subtitle">Click to browse for your export file</div>
+                        <input id="file-upload" type="file" accept=".csv" onchange="handleFileUpload(event)">
+                        <div id="upload-status" style="margin-top: 0.5rem; font-size: 0.875rem; font-weight: 500;" class="hidden"></div>
+                    </div>
+                    
+                    <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.5rem; padding: 0.75rem; margin-top: 1rem;">
+                        <h4 style="font-weight: 500; color: #1e40af; margin-bottom: 0.5rem;">Expected CSV Format (Updated):</h4>
+                        <div style="font-size: 0.875rem; color: #1e40af; line-height: 1.4;">
+                            • Column A: ID Number (Student ID)<br>
+                            • Column F: Tutor (Whānau Class)<br>
+                            • Column H: In Class %Year (Attendance)<br>
+                            • Column W: L Count5 Days (Lates)<br>
+                            • Column Z: ? Count5 Days (Unknown codes)<br>
+                            • Column AC: T Count5 Days (Truancy)<br>
+                            • Column AJ: Class EffortYear<br>
+                            • Column AK: Class Effort15 Days
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Alert Thresholds</h3>
+                </div>
+                <div class="card-content">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div>
+                            <h4 style="font-weight: 500; color: #dc2626; margin-bottom: 0.75rem;">High Priority (Leadership)</h4>
+                            <div style="font-size: 0.875rem; line-height: 1.6;">
+                                • 1+ truancy incidents (5 days)<br>
+                                • 1-4 unknown codes (5 days)<br>
+                                • 3+ lates (5 days)<br>
+                                • Alarming attendance changes
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 500; color: #2563eb; margin-bottom: 0.75rem;">Whānau Teacher Focus</h4>
+                            <div style="font-size: 0.875rem; line-height: 1.6;">
+                                • Class effort drops (0.5+ points)<br>
+                                • Class effort improvements (acknowledge!)<br>
+                                • Consistently low effort (under 3.0)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Whānau Follow-up Tab -->
+        <div id="content-whanau" class="tab-content">
+            <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <h3 style="font-weight: 500; color: #1e40af; margin-bottom: 0.5rem;">Engagement Focus</h3>
+                <p style="font-size: 0.875rem; color: #1e40af;">
+                    Students showing changes in class effort or consistently low engagement - whānau teacher follow-up needed.
+                </p>
+            </div>
+            <div id="whanau-groups-container">
+                <div class="empty-state">
+                    <p>No engagement concerns for whānau teacher follow-up.</p>
+                    <p style="font-size: 0.875rem; margin-top: 0.5rem;">Upload student data to see engagement patterns.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Urgent Action Tab -->
+        <div id="content-urgent" class="tab-content">
+            <div style="background-color: #fef2f2; border: 2px solid #fecaca; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <h3 style="font-weight: bold; color: #991b1b; font-size: 1.25rem; margin-bottom: 0.5rem;">🚨 Leadership Priority Actions</h3>
+                <p style="color: #b91c1c;">
+                    Students with attendance/behavioral concerns requiring immediate pastoral leader intervention.
+                </p>
+            </div>
+            <div id="urgent-students-container">
+                <div class="empty-state" style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 0.5rem; color: #16a34a;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                    <h3 style="font-size: 1.125rem; font-weight: 500; margin-bottom: 0.5rem;">No Urgent Cases</h3>
+                    <p>All students are within acceptable pastoral care parameters.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutor Analysis Tab -->
+        <div id="content-tutor-analysis" class="tab-content">
+            <div style="background-color: #fef3c7; border: 1px solid #fcd34d; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <h3 style="font-weight: bold; color: #92400e; font-size: 1.25rem; margin-bottom: 0.5rem;">📊 Tutor Follow-up Analysis</h3>
+                <p style="color: #b45309;">
+                    Identifying tutor classes where unknown attendance codes (? codes) may need more follow-up attention compared to school average.
+                </p>
+            </div>
+            <div id="tutor-analysis-container">
+                <div class="empty-state">
+                    <p>Upload student data to analyze tutor follow-up patterns</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Celebrations Tab -->
+        <div id="content-celebrations" class="tab-content">
+            <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <h3 style="font-weight: bold; color: #15803d; font-size: 1.25rem; margin-bottom: 0.5rem;">🎉 Student Celebrations</h3>
+                <p style="color: #16a34a;">
+                    Recognizing positive changes and achievements - students showing improvement deserve acknowledgment!
+                </p>
+            </div>
+            <div id="celebrations-container">
+                <div class="empty-state">
+                    <p>Upload data to see student achievements</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Students Tab -->
+        <div id="content-students" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">All Students</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Whānau</th>
+                                <th>Attendance</th>
+                                <th>Risk Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <tr>
+                                <td colspan="4" class="empty-state">Upload student data to view all students</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Summary Modal -->
+    <div id="student-modal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 id="modal-title" style="font-size: 1.25rem; font-weight: bold;"></h3>
+                <button onclick="closeModal()" style="background: none; border: none; font-size: 1.5rem; color: #9ca3af; cursor: pointer;">×</button>
+            </div>
+            <div id="modal-body"></div>
+            <div style="margin-top: 1rem; text-align: center;">
+                <button onclick="closeModal()" class="btn btn-blue">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let students = [];
+        let alerts = [];
+        let activeTab = 'dashboard';
+        let whanauGroups = {};
+        let completedStudents = new Set();
+
+        // Sample data
+        const sampleData = [
+            { 
+                id: 1, 
+                name: '24013',
+                whanau: '9A-TH', 
+                attendance: 89, 
+                lates5Day: 3, 
+                truants5Day: 0, 
+                unknownCount: 1, 
+                classEffort: 3.17, 
+                classEffortYear: 3.17, 
+                classEffort15Days: 3.16, 
+                risk: 'medium' 
+            },
+            { 
+                id: 2, 
+                name: '22002',
+                whanau: '9B-JS', 
+                attendance: 73, 
+                lates5Day: 3, 
+                truants5Day: 0, 
+                unknownCount: 1, 
+                classEffort: 3.18, 
+                classEffortYear: 3.18, 
+                classEffort15Days: 3.32, 
+                risk: 'medium' 
+            },
+            { 
+                id: 3, 
+                name: '25015',
+                whanau: '9A-TH', 
+                attendance: 88, 
+                lates5Day: 2, 
+                truants5Day: 0, 
+                unknownCount: 0, 
+                classEffort: 3.61, 
+                classEffortYear: 3.61, 
+                classEffort15Days: 3.54, 
+                risk: 'low' 
+            },
+            { 
+                id: 4, 
+                name: '24050',
+                whanau: '9B-JS', 
+                attendance: 65, 
+                lates5Day: 2, 
+                truants5Day: 0, 
+                unknownCount: 3, 
+                classEffort: 2.8, 
+                classEffortYear: 3.5, 
+                classEffort15Days: 2.8, 
+                risk: 'high' 
+            }
+        ];
+
+        // Initialize
+        function init() {
+            const today = new Date();
+            const dateEl = document.getElementById('current-date');
+            const mydayDateEl = document.getElementById('current-date-myday');
+            
+            if (dateEl) {
+                dateEl.textContent = today.toLocaleDateString('en-NZ', { 
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                });
+            }
+            
+            if (mydayDateEl) {
+                mydayDateEl.textContent = today.toLocaleDateString('en-NZ', { 
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                });
+            }
+
+            students = JSON.parse(JSON.stringify(sampleData));
+            updateMyDay();
+            updateWhanauGroups();
+            updateOtherTabs();
+        }
+
+        function switchTab(tabName) {
+            activeTab = tabName;
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById('content-' + tabName).classList.add('active');
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        function updateMyDay() {
+            const activeStudents = students.filter(s => !completedStudents.has(s.id));
+            
+            const urgentCalls = activeStudents.filter(s => s.truants5Day >= 1 || s.attendance < 50);
+            const followUps = activeStudents.filter(s => s.risk === 'medium' && s.truants5Day === 0 && s.attendance >= 50).slice(0, 10);
+            const celebrations = activeStudents.filter(s => 
+                (s.classEffort15Days - s.classEffortYear) >= 0.5 || 
+                (s.attendance >= 90 && s.truants5Day === 0 && s.lates5Day <= 1)
+            ).slice(0, 15);
+
+            const estimatedMinutes = (urgentCalls.length * 8) + (followUps.length * 3) + (celebrations.length * 1);
+
+            document.getElementById('urgent-calls-count').textContent = urgentCalls.length;
+            document.getElementById('follow-ups-count').textContent = followUps.length;
+            document.getElementById('celebrations-count').textContent = celebrations.length;
+            document.getElementById('estimated-time').textContent = estimatedMinutes;
+            document.getElementById('total-actions-today').textContent = urgentCalls.length + followUps.length + celebrations.length;
+
+            updateUrgentContainer(urgentCalls);
+            updateFollowupContainer(followUps);
+            updateCelebrationContainer(celebrations);
+            updateEscalationContainer();
+        }
+
+        function updateUrgentContainer(urgentCalls) {
+            const container = document.getElementById('urgent-calls-container');
+            if (!container) return;
+            
+            if (urgentCalls.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 1rem;"><p style="color: #16a34a;">No urgent calls needed today! 🎉</p></div>';
+                return;
+            }
+
+            let html = '';
+            urgentCalls.slice(0, 8).forEach((student, index) => {
+                html += '<div id="urgent-' + student.id + '" style="padding: 0.75rem 1rem; border-bottom: 1px solid #fee2e2; display: flex; justify-content: space-between; align-items: center;">';
+                html += '<div style="flex: 1;">';
+                html += '<div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">';
+                html += '<span style="background: #dc2626; color: white; border-radius: 50%; width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0;">' + (index + 1) + '</span>';
+                html += '<span class="student-id-link" onclick="showStudentSummary(' + student.id + ', \'urgent\')">' + student.name + '</span>';
+                html += '</div>';
+                html += '<div style="font-size: 0.75rem; color: #b91c1c; margin-bottom: 0.25rem;">';
+                if (student.truants5Day >= 1) html += '🚨 ' + student.truants5Day + ' truancy incidents ';
+                if (student.attendance < 50) html += '📉 Critical attendance: ' + student.attendance + '%';
+                html += '</div>';
+                html += '<div style="font-size: 0.75rem; color: #6b7280;">Est. 8 min call • ' + student.whanau + '</div>';
+                html += '</div>';
+                html += '<div style="display: flex; gap: 0.25rem; flex-shrink: 0;">';
+                html += '<button onclick="handleIntervention(' + student.id + ', \'Call\')" class="btn btn-red" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">📞 Call</button>';
+                html += '<button onclick="completeAction(' + student.id + ')" class="complete-btn">✓ Complete</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+
+            if (urgentCalls.length > 8) {
+                html += '<div style="padding: 0.5rem 1rem; text-align: center; background-color: #fef2f2; font-size: 0.875rem; color: #991b1b;">+' + (urgentCalls.length - 8) + ' more urgent cases</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function updateFollowupContainer(followUps) {
+            const container = document.getElementById('followup-container');
+            if (!container) return;
+            
+            if (followUps.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 1rem;"><p>No follow-ups needed today</p></div>';
+                return;
+            }
+
+            let html = '';
+            followUps.slice(0, 8).forEach((student, index) => {
+                html += '<div id="followup-' + student.id + '" style="padding: 0.75rem 1rem; border-bottom: 1px solid #dbeafe; display: flex; justify-content: space-between; align-items: center;">';
+                html += '<div style="flex: 1;">';
+                html += '<div style="margin-bottom: 0.25rem;"><span class="student-id-link" onclick="showStudentSummary(' + student.id + ', \'followup\')">' + student.name + '</span></div>';
+                html += '<div style="font-size: 0.75rem; color: #2563eb; margin-bottom: 0.25rem;">';
+                if (student.lates5Day >= 3) html += '⏰ ' + student.lates5Day + ' lates ';
+                if (student.unknownCount >= 1) html += '❓ ' + student.unknownCount + ' unknown codes ';
+                if (student.attendance < 80) html += '📊 ' + student.attendance + '% attendance';
+                html += '</div>';
+                html += '<div style="font-size: 0.75rem; color: #6b7280;">Est. 3 min email • ' + student.whanau + '</div>';
+                html += '</div>';
+                html += '<div style="display: flex; gap: 0.25rem; flex-shrink: 0;">';
+                html += '<button onclick="handleIntervention(' + student.id + ', \'Email\')" class="btn btn-blue" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">📧 Email</button>';
+                html += '<button onclick="completeAction(' + student.id + ')" class="complete-btn">✓ Complete</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        function updateCelebrationContainer(celebrations) {
+            const container = document.getElementById('celebration-actions-container');
+            if (!container) return;
+            
+            if (celebrations.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 1rem;"><p>No celebrations identified today</p></div>';
+                return;
+            }
+
+            let html = '';
+            celebrations.slice(0, 6).forEach((student) => {
+                const effortImprovement = (student.classEffort15Days - student.classEffortYear) >= 0.5;
+                const reason = effortImprovement ? 'Significant effort improvement' : 'Excellent overall performance';
+                
+                html += '<div id="celebration-' + student.id + '" style="padding: 0.75rem 1rem; border-bottom: 1px solid #dcfce7; display: flex; justify-content: space-between; align-items: center;">';
+                html += '<div style="flex: 1;">';
+                html += '<div style="margin-bottom: 0.25rem;">🌟 <span class="student-id-link" onclick="showStudentSummary(' + student.id + ', \'celebration\')">' + student.name + '</span></div>';
+                html += '<div style="font-size: 0.75rem; color: #16a34a; margin-bottom: 0.25rem;">' + reason + '</div>';
+                html += '<div style="font-size: 0.75rem; color: #6b7280;">Est. 1 min acknowledgment • ' + student.whanau + '</div>';
+                html += '</div>';
+                html += '<div style="display: flex; gap: 0.25rem; flex-shrink: 0;">';
+                html += '<button onclick="handleIntervention(' + student.id + ', \'Recognition\')" class="btn btn-green" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">👏 Recognize</button>';
+                html += '<button onclick="completeAction(' + student.id + ')" class="complete-btn">✓ Complete</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        function updateEscalationContainer() {
+            const container = document.getElementById('escalation-container');
+            if (!container) return;
+            
+            const escalations = students.filter(s => 
+                s.truants5Day >= 2 || 
+                (s.truants5Day >= 1 && s.attendance < 40) ||
+                (s.unknownCount >= 5 && s.lates5Day >= 5)
+            );
+            
+            if (escalations.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 1rem;"><p style="color: #16a34a;">No escalations needed today!</p></div>';
+                return;
+            }
+
+            let html = '';
+            escalations.forEach((student) => {
+                html += '<div style="padding: 0.75rem 1rem; border-bottom: 1px solid #fef3c7; display: flex; justify-content: space-between; align-items: center;">';
+                html += '<div style="flex: 1;">';
+                html += '<div style="font-weight: 600; color: #92400e; margin-bottom: 0.25rem;">⬆️ ' + student.name + '</div>';
+                html += '<div style="font-size: 0.75rem; color: #b45309; margin-bottom: 0.25rem;">Multiple serious concerns - needs leadership support</div>';
+                html += '<div style="font-size: 0.75rem; color: #6b7280;">' + student.whanau + '</div>';
+                html += '</div>';
+                html += '<div style="display: flex; gap: 0.25rem; flex-shrink: 0;">';
+                html += '<button onclick="handleIntervention(' + student.id + ', \'Escalation\')" class="btn" style="background-color: #f59e0b; color: white; padding: 0.25rem 0.5rem; font-size: 0.75rem;">📋 Escalate</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        function showStudentSummary(studentId, category) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const modal = document.getElementById('student-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+
+            let title = '';
+            let content = '';
+            let color = '';
+
+            if (category === 'urgent') {
+                title = '🚨 Urgent Attention Required';
+                color = '#dc2626';
+                content = '<div style="margin-bottom: 1rem;"><h4 style="color: ' + color + '; margin-bottom: 0.5rem;">Why ' + student.name + ' needs urgent attention:</h4>';
+                if (student.truants5Day >= 1) content += '<p style="color: #b91c1c; margin-bottom: 0.25rem;">🚨 ' + student.truants5Day + ' truancy incidents in the past 5 days</p>';
+                if (student.attendance < 50) content += '<p style="color: #b91c1c; margin-bottom: 0.25rem;">📉 Critical attendance: ' + student.attendance + '%</p>';
+                if (student.unknownCount >= 1) content += '<p style="color: #b45309; margin-bottom: 0.25rem;">❓ ' + student.unknownCount + ' unknown attendance codes</p>';
+                if (student.lates5Day >= 1) content += '<p style="color: #b45309; margin-bottom: 0.25rem;">⏰ ' + student.lates5Day + ' late arrivals (5 days)</p>';
+                content += '</div>';
+                content += '<div style="background-color: #fef2f2; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #dc2626;">';
+                content += '<p style="font-weight: 600; color: #991b1b; margin-bottom: 0.5rem;">Recommended Action:</p>';
+                content += '<p style="color: #991b1b; font-size: 0.875rem;">Immediate phone call to parent/whānau to discuss attendance concerns and provide support.</p>';
+                content += '</div>';
+            } else if (category === 'followup') {
+                title = '📋 Follow-up Required';
+                color = '#2563eb';
+                content = '<div style="margin-bottom: 1rem;"><h4 style="color: ' + color + '; margin-bottom: 0.5rem;">Why ' + student.name + ' needs follow-up:</h4>';
+                if (student.lates5Day >= 3) content += '<p style="color: #2563eb; margin-bottom: 0.25rem;">⏰ ' + student.lates5Day + ' late arrivals in the past 5 days</p>';
+                if (student.unknownCount >= 1) content += '<p style="color: #2563eb; margin-bottom: 0.25rem;">❓ ' + student.unknownCount + ' unknown attendance codes need clarification</p>';
+                if (student.attendance < 80) content += '<p style="color: #2563eb; margin-bottom: 0.25rem;">📊 Attendance dropping to ' + student.attendance + '%</p>';
+                content += '<p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">Overall risk level: <span style="color: #d97706; font-weight: 500;">MEDIUM</span></p>';
+                content += '</div>';
+                content += '<div style="background-color: #eff6ff; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #2563eb;">';
+                content += '<p style="font-weight: 600; color: #1e40af; margin-bottom: 0.5rem;">Recommended Action:</p>';
+                content += '<p style="color: #1e40af; font-size: 0.875rem;">Email or brief call to check in and offer support. Monitor for improvement over next week.</p>';
+                content += '</div>';
+            } else if (category === 'celebration') {
+                title = '🌟 Celebration Time!';
+                color = '#16a34a';
+                const effortImprovement = (student.classEffort15Days - student.classEffortYear) >= 0.5;
+                content = '<div style="margin-bottom: 1rem;"><h4 style="color: ' + color + '; margin-bottom: 0.5rem;">Why ' + student.name + ' deserves recognition:</h4>';
+                if (effortImprovement) content += '<p style="color: #16a34a; margin-bottom: 0.25rem;">📈 Significant effort improvement: ' + student.classEffortYear + ' → ' + student.classEffort15Days + '</p>';
+                if (student.attendance >= 90) content += '<p style="color: #16a34a; margin-bottom: 0.25rem;">📅 Excellent attendance: ' + student.attendance + '%</p>';
+                if (student.truants5Day === 0) content += '<p style="color: #16a34a; margin-bottom: 0.25rem;">✅ No truancy incidents recently</p>';
+                if (student.lates5Day <= 1) content += '<p style="color: #16a34a; margin-bottom: 0.25rem;">⏰ Great punctuality (' + student.lates5Day + ' late in 5 days)</p>';
+                content += '</div>';
+                content += '<div style="background-color: #f0fdf4; padding: 0.75rem; border-radius: 0.5rem; border-left: 4px solid #16a34a;">';
+                content += '<p style="font-weight: 600; color: #15803d; margin-bottom: 0.5rem;">Recommended Action:</p>';
+                content += '<p style="color: #15803d; font-size: 0.875rem;">Quick positive acknowledgment! A brief congratulation will reinforce their good choices.</p>';
+                content += '</div>';
+            }
+
+            content = '<div style="margin-bottom: 1rem;"><p style="font-weight: 600; color: #374151; margin-bottom: 0.25rem;">Student: ' + student.name + '</p><p style="font-size: 0.875rem; color: #6b7280;">Whānau Class: ' + student.whanau + '</p></div>' + content;
+
+            modalTitle.textContent = title;
+            modalTitle.style.color = color;
+            modalBody.innerHTML = content;
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('student-modal').classList.remove('show');
+        }
+
+        function completeAction(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            completedStudents.add(studentId);
+            
+            createConfetti();
+            
+            const elements = document.querySelectorAll('[id*="' + studentId + '"]');
+            elements.forEach(el => {
+                if (el.id.includes('urgent-') || el.id.includes('followup-') || el.id.includes('celebration-')) {
+                    el.style.transition = 'all 0.5s ease-out';
+                    el.style.transform = 'translateX(100%)';
+                    el.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        if (el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
+                    }, 500);
+                }
+            });
+
+            setTimeout(() => {
+                updateMyDay();
+                alert('✅ Completed action for ' + student.name + '! Great work! 🎉');
+                
+                const remaining = students.filter(s => !completedStudents.has(s.id));
+                const urgentRemaining = remaining.filter(s => s.truants5Day >= 1 || s.attendance < 50).length;
+                const followupRemaining = remaining.filter(s => s.risk === 'medium' && s.truants5Day === 0 && s.attendance >= 50).length;
+                const celebrationRemaining = remaining.filter(s => 
+                    (s.classEffort15Days - s.classEffortYear) >= 0.5 || 
+                    (s.attendance >= 90 && s.truants5Day === 0 && s.lates5Day <= 1)
+                ).length;
+                
+                if (urgentRemaining + followupRemaining + celebrationRemaining === 0) {
+                    setTimeout(() => {
+                        alert('🎉 Congratulations! You have completed all your pastoral care actions for today! Amazing work! 🌟');
+                    }, 1000);
+                }
+            }, 600);
+        }
+
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#fd79a8'];
+            
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = Math.random() * window.innerHeight + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                
+                document.body.appendChild(confetti);
+                
+                const angle = Math.random() * 360 * (Math.PI / 180);
+                const velocity = Math.random() * 200 + 100;
+                
+                confetti.animate([
+                    { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+                    { transform: 'translate(' + (Math.cos(angle) * velocity) + 'px, ' + (Math.sin(angle) * velocity + 200) + 'px) rotate(' + (Math.random() * 720) + 'deg)', opacity: 0 }
+                ], {
+                    duration: 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                };
+            }
+        }
+
+        function handleIntervention(studentId, type) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                alert(type + ' intervention logged for ' + student.name + '. This would normally update your pastoral care system.');
+            }
+        }
+
+        function updateWhanauGroups() {
+            whanauGroups = {};
+            students.forEach(student => {
+                const groupKey = student.whanau || 'Not Assigned';
+                if (!whanauGroups[groupKey]) {
+                    whanauGroups[groupKey] = [];
+                }
+                whanauGroups[groupKey].push(student);
+            });
+            
+            const whanauContainer = document.getElementById('whanau-groups-container');
+            if (!whanauContainer || Object.keys(whanauGroups).length === 0) {
+                if (whanauContainer) {
+                    whanauContainer.innerHTML = '<div class="empty-state"><p>No engagement concerns for whānau teacher follow-up.</p><p style="font-size: 0.875rem; margin-top: 0.5rem;">Upload student data to see engagement patterns.</p></div>';
+                }
+                return;
+            }
+
+            let html = '';
+            Object.keys(whanauGroups).forEach(whanauClass => {
+                const studentsInClass = whanauGroups[whanauClass];
+                const concernStudents = studentsInClass.filter(s => 
+                    Math.abs(s.classEffort15Days - s.classEffortYear) >= 0.3 || s.classEffortYear < 3.0
+                );
+                
+                if (concernStudents.length > 0) {
+                    html += '<div class="card">';
+                    html += '<div class="card-header">';
+                    html += '<h4 class="card-title">' + whanauClass + '</h4>';
+                    html += '<p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">' + concernStudents.length + ' students needing attention</p>';
+                    html += '</div>';
+                    html += '<div style="overflow-x: auto;">';
+                    html += '<table class="table">';
+                    html += '<thead><tr><th>Student</th><th>Effort Year</th><th>Effort 15 Days</th><th>Change</th><th>Action</th></tr></thead>';
+                    html += '<tbody>';
+                    
+                    concernStudents.forEach(student => {
+                        const effortChange = student.classEffort15Days - student.classEffortYear;
+                        const changeColor = effortChange > 0 ? '#16a34a' : effortChange < -0.3 ? '#dc2626' : '#6b7280';
+                        const changeText = effortChange > 0 ? '+' + effortChange.toFixed(2) : effortChange.toFixed(2);
+                        
+                        html += '<tr>';
+                        html += '<td style="font-weight: 500;">' + student.name + '</td>';
+                        html += '<td>' + student.classEffortYear.toFixed(2) + '</td>';
+                        html += '<td>' + student.classEffort15Days.toFixed(2) + '</td>';
+                        html += '<td style="color: ' + changeColor + '; font-weight: 500;">' + changeText + '</td>';
+                        html += '<td>';
+                        if (effortChange >= 0.5) {
+                            html += '<span style="color: #16a34a;">🌟 Acknowledge improvement</span>';
+                        } else if (effortChange <= -0.5) {
+                            html += '<span style="color: #dc2626;">📞 Contact needed</span>';
+                        } else if (student.classEffortYear < 3.0) {
+                            html += '<span style="color: #f59e0b;">📧 Check-in suggested</span>';
+                        } else {
+                            html += '<span style="color: #6b7280;">Monitor</span>';
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                    
+                    html += '</tbody></table></div></div>';
+                }
+            });
+            
+            if (html === '') {
+                html = '<div class="empty-state"><p>No engagement concerns for whānau teacher follow-up.</p><p style="font-size: 0.875rem; margin-top: 0.5rem; color: #16a34a;">All students showing stable engagement levels! 🎉</p></div>';
+            }
+            
+            whanauContainer.innerHTML = html;
+        }
+
+        function updateOtherTabs() {
+            updateUrgentStudentsTab();
+            updateTutorAnalysisTab();
+            updateCelebrationsTab();
+            updateStudentsTable();
+        }
+
+        function updateUrgentStudentsTab() {
+            const container = document.getElementById('urgent-students-container');
+            if (!container) return;
+            
+            const urgentStudents = students.filter(s => 
+                s.truants5Day >= 1 || s.unknownCount >= 1 || s.lates5Day >= 3 || s.attendance < 50
+            );
+            
+            if (urgentStudents.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 0.5rem; color: #16a34a;"><div style="font-size: 3rem; margin-bottom: 1rem;">✅</div><h3 style="font-size: 1.125rem; font-weight: 500; margin-bottom: 0.5rem;">No Urgent Cases</h3><p>All students are within acceptable pastoral care parameters.</p></div>';
+                return;
+            }
+
+            let html = '';
+            urgentStudents.forEach((student, index) => {
+                const reasons = [];
+                if (student.truants5Day >= 1) reasons.push(student.truants5Day + ' truancy incidents');
+                if (student.unknownCount >= 1) reasons.push(student.unknownCount + ' unknown codes');
+                if (student.lates5Day >= 3) reasons.push(student.lates5Day + ' late arrivals');
+                if (student.attendance < 50) reasons.push('Critical attendance: ' + student.attendance + '%');
+                
+                html += '<div class="card">';
+                html += '<div class="card-header" style="background-color: #fef2f2;">';
+                html += '<div style="display: flex; justify-content: space-between; align-items: start;">';
+                html += '<div>';
+                html += '<h4 style="color: #991b1b; font-weight: 600;">#' + (index + 1) + ': ' + student.name + '</h4>';
+                html += '<p style="font-size: 0.875rem; color: #b91c1c; margin-top: 0.25rem;">Whānau: ' + student.whanau + '</p>';
+                html += '</div>';
+                html += '<span class="risk-badge ' + student.risk + '">' + student.risk.toUpperCase() + '</span>';
+                html += '</div>';
+                html += '</div>';
+                html += '<div class="card-content">';
+                html += '<div style="margin-bottom: 1rem;">';
+                html += '<h5 style="font-weight: 500; margin-bottom: 0.5rem;">Concerns:</h5>';
+                html += '<ul style="margin-left: 1rem; color: #991b1b;">';
+                reasons.forEach(reason => {
+                    html += '<li style="margin-bottom: 0.25rem;">' + reason + '</li>';
+                });
+                html += '</ul>';
+                html += '</div>';
+                html += '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">';
+                html += '<button onclick="handleIntervention(' + student.id + ', \'Leadership Call\')" class="btn btn-red">📞 Call Parent/Whānau</button>';
+                html += '<button onclick="handleIntervention(' + student.id + ', \'Meeting\')" class="btn btn-blue">👥 Schedule Meeting</button>';
+                html += '<button onclick="handleIntervention(' + student.id + ', \'Escalation\')" class="btn" style="background-color: #f59e0b; color: white;">📋 Senior Leadership</button>';
+                html += '</div>';
+                html += '</div>';
+                html += '</div>';
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function updateTutorAnalysisTab() {
+            const container = document.getElementById('tutor-analysis-container');
+            if (!container) return;
+            
+            if (students.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Upload student data to analyze tutor follow-up patterns</p></div>';
+                return;
+            }
+
+            const tutorStats = {};
+            students.forEach(student => {
+                const tutor = student.whanau || 'Unknown';
+                if (!tutorStats[tutor]) {
+                    tutorStats[tutor] = {
+                        totalStudents: 0,
+                        unknownCodes: 0,
+                        students: []
+                    };
+                }
+                tutorStats[tutor].totalStudents++;
+                tutorStats[tutor].unknownCodes += student.unknownCount || 0;
+                tutorStats[tutor].students.push(student);
+            });
+
+            const schoolAverage = students.reduce((sum, s) => sum + (s.unknownCount || 0), 0) / students.length;
+
+            let html = '<div class="card">';
+            html += '<div class="card-header">';
+            html += '<h4 class="card-title">School Average: ' + schoolAverage.toFixed(2) + ' unknown codes per student (5 days)</h4>';
+            html += '</div>';
+            html += '<div style="overflow-x: auto;">';
+            html += '<table class="table">';
+            html += '<thead><tr><th>Tutor Class</th><th>Students</th><th>Unknown Codes</th><th>Average per Student</th><th>vs School Average</th><th>Action Needed</th></tr></thead>';
+            html += '<tbody>';
+
+            Object.keys(tutorStats).sort().forEach(tutor => {
+                const stats = tutorStats[tutor];
+                const avgPerStudent = stats.unknownCodes / stats.totalStudents;
+                const vsAverage = avgPerStudent - schoolAverage;
+                const needsAttention = avgPerStudent > schoolAverage * 1.5;
+                
+                html += '<tr style="' + (needsAttention ? 'background-color: #fef3c7;' : '') + '">';
+                html += '<td style="font-weight: 500;">' + tutor + '</td>';
+                html += '<td>' + stats.totalStudents + '</td>';
+                html += '<td>' + stats.unknownCodes + '</td>';
+                html += '<td>' + avgPerStudent.toFixed(2) + '</td>';
+                html += '<td style="color: ' + (vsAverage > 0 ? '#dc2626' : '#16a34a') + '; font-weight: 500;">';
+                html += (vsAverage > 0 ? '+' : '') + vsAverage.toFixed(2);
+                html += '</td>';
+                html += '<td>';
+                if (needsAttention) {
+                    html += '<span style="color: #92400e; font-weight: 500;">📞 Follow-up needed</span>';
+                } else {
+                    html += '<span style="color: #16a34a;">✅ Good tracking</span>';
+                }
+                html += '</td>';
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div></div>';
+
+            if (Object.keys(tutorStats).some(tutor => tutorStats[tutor].unknownCodes / tutorStats[tutor].totalStudents > schoolAverage * 1.5)) {
+                html += '<div style="background-color: #fef3c7; border: 1px solid #fcd34d; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem;">';
+                html += '<h4 style="color: #92400e; font-weight: 600; margin-bottom: 0.5rem;">📋 Recommended Actions:</h4>';
+                html += '<ul style="margin-left: 1rem; color: #b45309; line-height: 1.6;">';
+                html += '<li>Contact highlighted tutor teachers about attendance follow-up procedures</li>';
+                html += '<li>Provide additional support for classes with high unknown code rates</li>';
+                html += '<li>Review if tutor teachers need training on attendance coding</li>';
+                html += '</ul>';
+                html += '</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function updateCelebrationsTab() {
+            const container = document.getElementById('celebrations-container');
+            if (!container) return;
+            
+            const celebrations = students.filter(s => 
+                (s.classEffort15Days - s.classEffortYear) >= 0.3 || 
+                (s.attendance >= 90 && s.truants5Day === 0 && s.lates5Day <= 1) ||
+                s.classEffortYear >= 4.0
+            );
+            
+            if (celebrations.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Upload data to see student achievements</p></div>';
+                return;
+            }
+
+            const categories = {
+                'Effort Improvement': celebrations.filter(s => (s.classEffort15Days - s.classEffortYear) >= 0.3),
+                'Excellent Attendance': celebrations.filter(s => s.attendance >= 95 && s.truants5Day === 0),
+                'Outstanding Effort': celebrations.filter(s => s.classEffortYear >= 4.0),
+                'Overall Excellence': celebrations.filter(s => s.attendance >= 90 && s.classEffortYear >= 3.5 && s.truants5Day === 0 && s.lates5Day <= 1)
+            };
+
+            let html = '';
+            Object.keys(categories).forEach(categoryName => {
+                const categoryStudents = categories[categoryName];
+                if (categoryStudents.length === 0) return;
+
+                html += '<div class="card">';
+                html += '<div class="card-header" style="background-color: #f0fdf4;">';
+                html += '<h4 style="color: #15803d; font-weight: 600;">🌟 ' + categoryName + '</h4>';
+                html += '<p style="font-size: 0.875rem; color: #16a34a; margin-top: 0.25rem;">' + categoryStudents.length + ' students deserve recognition</p>';
+                html += '</div>';
+                html += '<div style="overflow-x: auto;">';
+                html += '<table class="table">';
+                html += '<thead><tr><th>Student</th><th>Whānau</th><th>Achievement</th><th>Action</th></tr></thead>';
+                html += '<tbody>';
+
+                categoryStudents.forEach(student => {
+                    let achievement = '';
+                    if (categoryName === 'Effort Improvement') {
+                        const improvement = student.classEffort15Days - student.classEffortYear;
+                        achievement = 'Effort improved by +' + improvement.toFixed(2) + ' points';
+                    } else if (categoryName === 'Excellent Attendance') {
+                        achievement = student.attendance + '% attendance, ' + (student.lates5Day || 0) + ' lates';
+                    } else if (categoryName === 'Outstanding Effort') {
+                        achievement = 'Consistent ' + student.classEffortYear.toFixed(2) + ' effort rating';
+                    } else {
+                        achievement = 'Multiple excellence indicators';
+                    }
+
+                    html += '<tr>';
+                    html += '<td style="font-weight: 500;">' + student.name + '</td>';
+                    html += '<td>' + student.whanau + '</td>';
+                    html += '<td style="color: #16a34a;">' + achievement + '</td>';
+                    html += '<td><button onclick="handleIntervention(' + student.id + ', \'Recognition\')" class="btn btn-green" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">👏 Send Recognition</button></td>';
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table></div></div>';
+            });
+
+            if (html === '') {
+                html = '<div class="empty-state"><p>No specific achievements to celebrate at this time.</p><p style="font-size: 0.875rem; margin-top: 0.5rem;">Check back after data updates to see student improvements!</p></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const statusElement = document.getElementById('upload-status');
+            statusElement.className = 'text-blue-600';
+            statusElement.textContent = 'Processing file...';
+            statusElement.classList.remove('hidden');
+            
+            try {
+                const text = await file.text();
+                const lines = text.split(/\r\n|\r|\n/);
+                const newStudents = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i] && lines[i].trim()) {
+                        const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                        
+                        if (values.length >= 35) {
+                            const student = {
+                                id: Date.now() + i,
+                                name: values[0] || 'Unknown',
+                                whanau: values[5] || 'Not specified',
+                                attendance: parseInt(values[7]) || 100,
+                                lates5Day: parseInt(values[22]) || 0,
+                                unknownCount: parseInt(values[25]) || 0,
+                                truants5Day: parseInt(values[28]) || 0,
+                                classEffort: parseFloat(values[35]) || 0,
+                                classEffortYear: parseFloat(values[35]) || 0,
+                                classEffort15Days: parseFloat(values[36]) || 0,
+                                risk: 'low'
+                            };
+                            
+                            const hasTruants5Day = student.truants5Day >= 1;
+                            const hasUnknown5Day = student.unknownCount >= 1 && student.unknownCount <= 4;
+                            const hasExcessiveLates = student.lates5Day >= 3;
+                            
+                            if (hasTruants5Day || hasUnknown5Day || hasExcessiveLates) {
+                                student.risk = 'high';
+                            } else if (student.attendance < 80 || student.lates5Day >= 1) {
+                                student.risk = 'medium';
+                            }
+                            
+                            newStudents.push(student);
+                        }
+                    }
+                }
+                
+                students = newStudents;
+                completedStudents.clear();
+                updateMyDay();
+                updateWhanauGroups();
+                updateOtherTabs();
+                
+                statusElement.className = 'text-green-600';
+                statusElement.textContent = 'Successfully imported ' + newStudents.length + ' students!';
+                
+                switchTab('dashboard');
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                statusElement.className = 'text-red-600';
+                statusElement.textContent = 'Error processing file: ' + error.message;
+            }
+            
+            setTimeout(() => {
+                statusElement.classList.add('hidden');
+            }, 5000);
+        }
+
+        function updateStudentsTable() {
+            const tbody = document.getElementById('students-table-body');
+            if (!tbody) return;
+            
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Upload student data to view all students</td></tr>';
+                return;
+            }
+
+            let html = '';
+            students.forEach(student => {
+                html += '<tr>';
+                html += '<td style="font-weight: 500; color: #111827;">' + student.name + '</td>';
+                html += '<td>' + student.whanau + '</td>';
+                html += '<td>' + student.attendance + '%</td>';
+                html += '<td><span class="risk-badge ' + student.risk + '">' + student.risk.toUpperCase() + '</span></td>';
+                html += '</tr>';
+            });
+            tbody.innerHTML = html;
+        }
+
+        function markAllUrgentComplete() {
+            const urgentStudents = students.filter(s => !completedStudents.has(s.id) && (s.truants5Day >= 1 || s.attendance < 50));
+            urgentStudents.forEach(student => {
+                completedStudents.add(student.id);
+            });
+            
+            if (urgentStudents.length > 0) {
+                createConfetti();
+                updateMyDay();
+                alert('✅ Marked ' + urgentStudents.length + ' urgent cases as complete! Excellent work! 🎉');
+            } else {
+                alert('No urgent cases to complete.');
+            }
+        }
+
+        function exportTodaysPlan() {
+            const urgentCalls = students.filter(s => !completedStudents.has(s.id) && (s.truants5Day >= 1 || s.attendance < 50));
+            const followUps = students.filter(s => !completedStudents.has(s.id) && s.risk === 'medium' && s.truants5Day === 0 && s.attendance >= 50);
+            const celebrations = students.filter(s => !completedStudents.has(s.id) && ((s.classEffort15Days - s.classEffortYear) >= 0.5 || (s.attendance >= 90 && s.truants5Day === 0 && s.lates5Day <= 1)));
+            
+            let plan = 'PASTORAL CARE PLAN - ' + new Date().toLocaleDateString('en-NZ') + '\n\n';
+            
+            plan += '🚨 URGENT CALLS (' + urgentCalls.length + '):\n';
+            urgentCalls.forEach((student, index) => {
+                plan += (index + 1) + '. ' + student.name + ' (' + student.whanau + ')\n';
+                if (student.truants5Day >= 1) plan += '   - ' + student.truants5Day + ' truancy incidents\n';
+                if (student.attendance < 50) plan += '   - Critical attendance: ' + student.attendance + '%\n';
+            });
+            
+            plan += '\n📧 FOLLOW-UPS (' + followUps.length + '):\n';
+            followUps.forEach((student, index) => {
+                plan += (index + 1) + '. ' + student.name + ' (' + student.whanau + ')\n';
+                if (student.lates5Day >= 3) plan += '   - ' + student.lates5Day + ' lates\n';
+                if (student.unknownCount >= 1) plan += '   - ' + student.unknownCount + ' unknown codes\n';
+            });
+            
+            plan += '\n🌟 CELEBRATIONS (' + celebrations.length + '):\n';
+            celebrations.forEach((student, index) => {
+                plan += (index + 1) + '. ' + student.name + ' (' + student.whanau + ')\n';
+                const effortImprovement = (student.classEffort15Days - student.classEffortYear) >= 0.5;
+                plan += '   - ' + (effortImprovement ? 'Effort improvement' : 'Excellent performance') + '\n';
+            });
+            
+            const blob = new Blob([plan], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pastoral-care-plan-' + new Date().toISOString().split('T')[0] + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('📋 Today\'s plan exported successfully!');
+        }
+
+        function setReminders() {
+            const activeActions = students.filter(s => !completedStudents.has(s.id) && (s.truants5Day >= 1 || s.attendance < 50 || s.risk === 'medium')).length;
+            
+            if (activeActions === 0) {
+                alert('No active actions to set reminders for! 🎉');
+                return;
+            }
+            
+            const reminderTime = prompt('Set reminder in how many minutes? (e.g., 30, 60, 120)', '60');
+            if (reminderTime && !isNaN(reminderTime)) {
+                setTimeout(() => {
+                    alert('⏰ Reminder: You have ' + activeActions + ' pastoral care actions still pending!');
+                }, parseInt(reminderTime) * 60 * 1000);
+                alert('⏰ Reminder set for ' + reminderTime + ' minutes from now!');
+            }
+        }
+
+        function quickStatsUpdate() {
+            const totalStudents = students.length;
+            const highRisk = students.filter(s => s.risk === 'high').length;
+            const mediumRisk = students.filter(s => s.risk === 'medium').length;
+            const lowRisk = students.filter(s => s.risk === 'low').length;
+            const completed = completedStudents.size;
+            
+            let stats = 'QUICK STATS UPDATE:\n\n';
+            stats += 'Student Risk Levels:\n';
+            stats += '• High Risk: ' + highRisk + ' (' + (totalStudents > 0 ? (highRisk/totalStudents*100).toFixed(1) : 0) + '%)\n';
+            stats += '• Medium Risk: ' + mediumRisk + ' (' + (totalStudents > 0 ? (mediumRisk/totalStudents*100).toFixed(1) : 0) + '%)\n';
+            stats += '• Low Risk: ' + lowRisk + ' (' + (totalStudents > 0 ? (lowRisk/totalStudents*100).toFixed(1) : 0) + '%)\n\n';
+            stats += 'Today\'s Progress:\n';
+            stats += '• Actions Completed: ' + completed + '\n';
+            stats += '• Overall Health: ' + (totalStudents > 0 ? ((lowRisk/totalStudents)*100).toFixed(1) : 0) + '% of students in good standing';
+            
+            alert(stats);
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
