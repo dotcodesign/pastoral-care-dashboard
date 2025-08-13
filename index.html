@@ -55,6 +55,8 @@
             background: var(--primary-color);
             padding: 1rem;
             z-index: 1000;
+            min-height: 100vh;
+            overflow-y: auto;
         }
         
         .login-card {
@@ -63,7 +65,11 @@
             padding: 3rem;
             box-shadow: var(--shadow-lg);
             min-width: 420px;
+            max-width: 90vw;
             border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
         }
         
         .login-title {
@@ -650,8 +656,10 @@
                 gap: 1.5rem; 
             }
             .login-card {
-                min-width: 320px;
+                min-width: 300px;
+                max-width: 95vw;
                 padding: 2rem;
+                margin: 1rem;
             }
             .main-content {
                 padding: 1.5rem 1rem;
@@ -674,6 +682,19 @@
             }
             .nav-tabs {
                 flex-wrap: wrap;
+            }
+            .login-card {
+                min-width: 280px;
+                max-width: 95vw;
+                padding: 1.5rem;
+                margin: 0.5rem;
+            }
+            .login-title {
+                font-size: 1.5rem;
+            }
+            .demo-accounts {
+                font-size: 0.75rem;
+                padding: 1rem;
             }
         }
     </style>
@@ -703,7 +724,7 @@
                 <strong>Whānau Leaders:</strong> hinau/hinau123, kowhai/kowhai123, tawa/tawa123, miro/miro123<br>
                 <strong>Whānau Teachers:</strong><br>
                 <em>Year 9:</em> 9han/9han123, 9kat/9kat123, 9mat/9mat123, 9tmc/9tmc123, 9whi/9whi123, 9kar/9kar123<br>
-                <em>Year 10:</em> 10han/10han123, 10kat/10kat123, 10mat/10mat123, 10tmc/10tmc123, 10whi/10whi123, 10kar/10kar123<br>
+                <em>Year 10:</em> 10han/10han123, 10kat/10kat123, 10mat/10mat123, 10tmc/10tmc123, 10whi/10whi123, 10kar/10kar123, 10hcv/10hcv123<br>
                 <em>Year 11:</em> 11han/11han123, 11kat/11kat123, 11mat/11mat123, 11tmc/11tmc123, 11whi/11whi123, 11kar/11kar123<br>
                 <em>Year 12:</em> 12han/12han123, 12kat/12kat123, 12mat/12mat123, 12tmc/12tmc123, 12whi/12whi123, 12kar/12kar123<br>
                 <em>Year 13:</em> 13han/13han123, 13kat/13kat123, 13mat/13mat123, 13tmc/13tmc123, 13whi/13whi123, 13kar/13kar123<br>
